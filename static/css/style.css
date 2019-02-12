@@ -1,0 +1,213 @@
+html, body, div, span,
+h1, h2, h3, h4, h5, h6,
+p, footer, header {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* Header */
+
+header {
+    padding: 20px 0;
+    margin: 0 0 40px 0;
+    background: #5778C4;
+    color: #fff;
+}
+header h1 {
+    width: 800px;
+    margin: 0 auto;
+    font-size: 40px;
+}
+header a {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #fff;
+}
+
+/* Body */
+section {
+    width: 800px;
+    margin: 0 auto;
+}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+* {
+    box-sizing: border-box;
+}
+
+.bot-name {
+    font-weight: bold;
+}
+
+/* The popup chat - hidden by default */
+.chat-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+    height: 550px;
+    background-color: white;
+}
+
+/* Add styles to the form container */
+.form-container {
+    max-width: 350px;
+    max-height: 500px;
+    padding: 10px;
+    background-color: white;
+}
+
+/* Full-width textarea */
+.form-container textarea {
+    width: 70%;
+    padding: 15px;
+    margin: 5px 10px 10px 0;
+    border: none;
+    background: #f1f1f1;
+    resize: none;
+    height: 50px;
+    float: left;
+}
+
+/* When the textarea gets focus, do something */
+.form-container textarea:focus {
+    background-color: #ddd;
+    outline: none;
+}
+
+/* Set a style for the submit/login button */
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom:10px;
+    opacity: 0.8;
+}
+
+/* Button used to open the chat form - fixed at the bottom of the page */
+.open {
+    background-color: #555;
+    position: fixed;
+    bottom: 23px;
+    right: 28px;
+    width: 330px;
+}
+
+.form-container .send {
+    width: 21%;
+    height: 50px;
+    margin: 5px 0 22px 0;
+    padding: 15px;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+    background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+    opacity: 1;
+}
+
+.form-container .wrap {
+    width: 350px;
+    height: 50px;
+}
+
+.messages {
+    height: 360px;
+    overflow: auto;
+    background: #eee;
+    margin: 2px 0 5px 0;
+}
+
+.username {
+    display: inline-block;
+    color: #C07A36;
+    font-weight: bold;
+    padding: 5px;
+    float: left;
+    margin-right: 10px;
+}
+
+.right {
+    float: right;
+}
+
+.message {
+    padding: 5px;
+}
+
+.msg-container {
+    border: 2px solid #dedede;
+    margin: 10px 5px 5px 5px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.darker {
+    border-color: #ccc;
+    background-color: #ddd;
+}
+
+/*-------------------------------------------------------*/
+/* For pop-up ask username */
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  width: 425px;
+  border: 3px solid #f1f1f1;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.ok {
+    width: 80px;
+}
+
+.input-name {
+    padding: 15px;
+    margin: 5px 10px 10px 0;
+    border: none;
+    background: #f1f1f1;
+    resize: none;
+
+}

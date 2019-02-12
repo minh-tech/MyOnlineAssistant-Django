@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Chat-bot Example{% endblock %}
+{% block header_text %}Chat-bot Example{% endblock %}
+
+{% block content %}
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p>Can you let me know your name: (Click OK to skip)</p>
+            <input type="text" class="input-name" placeholder="Your name...">
+            <button class="btn ok">OK</button>
+        </div>
+    </div>
+
+    <button type="button" class="btn open">Chat</button>
+
+    <div class="chat-popup" id="myForm">
+        <form class="form-container">
+            <label class="bot-name">Welcome!</label>
+            <div class="messages"></div>
+            <div class="wrap">
+                <textarea class="text-input" placeholder="Type message..." required></textarea>
+                <button type="button" class="btn send">Send</button>
+            </div>
+            <button type="button" class="btn cancel">Close</button>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block extra_body %}
+
+{% endblock %}
