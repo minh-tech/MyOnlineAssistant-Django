@@ -39,17 +39,18 @@ ASGI_APPLICATION = 'MyOnlineAssistant.routing.application'
 
 MSG_TYPE_REQUEST = 1    # For a user request a question
 MSG_TYPE_RESPONSE = 2   # For a chat bot response an answer
+MSG_TYPE_DATETIME = 3   # For a chat bot response an answer
 
 MESSAGE_TYPES_CHOICES = (
     (MSG_TYPE_REQUEST, 'REQUEST'),
     (MSG_TYPE_RESPONSE, 'RESPONSE'),
-
+    (MSG_TYPE_DATETIME, 'DATETIME'),
 )
 
 MESSAGE_TYPES_LIST = [
     MSG_TYPE_REQUEST,
     MSG_TYPE_RESPONSE,
-
+    MSG_TYPE_DATETIME,
 ]
 
 # Quick-start development settings - unsuitable for production
@@ -165,9 +166,11 @@ TIME_ZONE = 'EST'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
+
+DATETIME_FORMAT = '%Y-%m-%d %H:%M'
 
 
 # Static files (CSS, JavaScript, Images)

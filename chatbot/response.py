@@ -86,13 +86,14 @@ class ChatBotResponse:
                 results.pop(0)
 
     @database_sync_to_async
-    def welcome(self, username=""):
-
-        if "visitor" in username.lower():
-            welcome = "Hi, there. How are you? My name is Cheri. I am an online assistant of Minh. " \
+    def welcome(self, username="", existed=False):
+        if existed:
+            welcome = "Glad to see you come back/What do you want to know this time?"
+        elif "visitor" in username.lower():
+            welcome = "Hi, there. How are you? My name is Cheri/I am an online assistant of Minh/" \
                       "What should I call you by?"
         else:
-            welcome = "Nice to meet you, {}. What do you want to know about him?".format(username)
+            welcome = "Nice to meet you, %s/What do you want to know about him?" % username
 
         return welcome
 

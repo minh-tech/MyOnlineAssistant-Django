@@ -143,6 +143,11 @@ socket.onmessage = function(message) {
                 }
 
             break;
+            case 3:
+                messages.innerHTML += "<div class='msg-container text-muted'>" +
+                    "<span class='message'>" + data.message + "</span>" +
+                    "</div>";
+            break;
         }
         messages.scrollTop = messages.scrollHeight;
 
@@ -224,10 +229,10 @@ function waitForSocketConnection(_socket, callback) {
 
 openButton.onclick = function() {
     chatBox.style.display = "block";
+    messages.scrollTop = messages.scrollHeight;
     return false;
 }
 
-// Leave room
 cancelButton.onclick = function() {
     chatBox.style.display = "none";
     return false;

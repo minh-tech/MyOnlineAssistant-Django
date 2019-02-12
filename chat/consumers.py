@@ -47,7 +47,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         command = content.get("command", None)
         if command == "join":
             self.username = content.get("username", "Visitor")
-            await self.update_user_into_database()
             await self.enter_website()
         elif command == "send":
             await self.send_room(content["message"])
@@ -58,18 +57,58 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     """
     async def enter_website(self):
 
-        # Chatbot welcome
-        welcome = await ChatBotResponse.welcome(self.username)
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                "type": "chat.message",
-                "room_id": self.user_id,
-                "username": settings.BOT_NAME,
-                "message": welcome,
-            }
-        )
-        await self.insert_message_into_database(settings.BOT_NAME, welcome)
+        await self.update_user_into_database()
+        messages = await self.load_messages_from_database()
+        if messages:
+            last_time = datetime.now()
+            for msg in messages:
+                last_time = msg.created_date
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        "type": "chat.message",
+                        "room_id": self.user_id,
+                        "username": msg.name,
+                        "message": msg.content,
+                    }
+                )
+
+            # Send last active date notification
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "chat.notification",
+                    "room_id": self.user_id,
+                    "message": str(last_time.strftime(settings.DATETIME_FORMAT)),
+                }
+            )
+
+            # Chatbot welcome when user come back
+            welcome = await ChatBotResponse.welcome(self.username, True)
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "chat.message",
+                    "room_id": self.user_id,
+                    "username": settings.BOT_NAME,
+                    "message": welcome,
+                }
+            )
+            # await self.insert_message_into_database(settings.BOT_NAME, welcome)
+
+        else:
+            # Chatbot welcome
+            welcome = await ChatBotResponse.welcome(self.username, False)
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "chat.message",
+                    "room_id": self.user_id,
+                    "username": settings.BOT_NAME,
+                    "message": welcome,
+                }
+            )
+            await self.insert_message_into_database(settings.BOT_NAME, welcome)
 
     """
     Called by receive_json when someone sends a message
@@ -100,13 +139,18 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         )
         await self.insert_message_into_database(settings.BOT_NAME, response)
 
-    # ----Get user and messages from database---- #
+    # ----Handle user and messages from database---- #
+    """
+        Update a user into database and check the user existed in database
+    """
     async def update_user_into_database(self):
 
+        existed = True
         query_set = User.objects.filter(user_id=self.user_id)
         date_now = datetime.now()
         if not query_set.exists():
             User.objects.create(user_id=self.user_id, username=self.username, email="", last_active_date=date_now)
+            existed = False
         else:
 
             user = User.objects.get(user_id=self.user_id)
@@ -115,16 +159,24 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             if date_now != user.last_active_date:
                 user.last_active_date = date_now
             user.save()
+        return existed
 
+    """
+        Insert a message into database
+    """
     async def insert_message_into_database(self, name, content):
         Message.objects.create(user_id=self.user_id, name=name, content=content)
 
-    async def get_messages_from_database(self):
+    """
+        Load messages from database
+    """
+    async def load_messages_from_database(self):
+
         query_set = Message.objects.filter(user_id=self.user_id)
-        if not query_set.exists():
-            return ""
-        for msg in query_set:
-            print(msg)
+        if query_set.exists():
+            for msg in query_set:
+                print(msg)
+            return query_set
 
     # ----Handlers for messages sent over the channel layer---- #
     """
@@ -150,3 +202,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                     "message": event["message"],
                 },
             )
+
+    async def chat_notification(self, event):
+        await self.send_json(
+            {
+                "msg_type": settings.MSG_TYPE_DATETIME,
+                "room": event["room_id"],
+                "message": event["message"],
+            },
+        )
