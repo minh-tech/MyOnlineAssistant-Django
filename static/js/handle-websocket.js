@@ -99,10 +99,11 @@ input.addEventListener(
     false);
 
 function sendMessage() {
-    socket.send(JSON.stringify({
-        "command": "send",
-        "message": input.value,
-    }));
+    if (input.value.trim() != "")
+        socket.send(JSON.stringify({
+            "command": "send",
+            "message": input.value.trim(),
+        }));
     input.value = "";
     return false;
 }
@@ -156,11 +157,9 @@ socket.onmessage = function(message) {
     }
 };
 
-function setCookieUser(key, expire_days) {
 
-    return current_date;
-}
-
+//-----------------Cookie----------------------------
+// Add keys and values to cookie
 function addCookie(key, value, expire_days) {
 
     var expire_date = new Date();
@@ -171,6 +170,7 @@ function addCookie(key, value, expire_days) {
     document.cookie = key + "=" + value + ";" + expires + ";path=/";
 }
 
+// Get Cookie by key, set default value if key is not existed
 function getCookieUser(key, default_value){
     var edited_key = key + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -190,6 +190,7 @@ function getCookieUser(key, default_value){
     return default_value;
 }
 
+// Get User ID from cookie or create one
 function getUserIdFromCookie(){
     var user_id = getCookieUser("user_id", "");
     if (user_id == "") {

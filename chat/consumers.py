@@ -3,12 +3,13 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from chatbot.response import ChatBotResponse
 from chat.models import User, Message
 from datetime import datetime
+import pytz
 
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     show_details = True
     chatbot = ChatBotResponse()
-    username = ""
+    username = "Visitor"
 
     """
     Called when the websocket is handshaking as part of initial connection.
@@ -72,6 +73,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                         "message": msg.content,
                     }
                 )
+            last_time = last_time.astimezone(pytz.timezone(settings.TIME_ZONE))
 
             # Send last active date notification
             await self.channel_layer.group_send(
@@ -153,7 +155,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             existed = False
         else:
 
-            user = User.objects.get(user_id=self.user_id)
+            user = query_set[0]
             if self.username.lower() != "visitor":
                 user.username = self.username
             if date_now != user.last_active_date:
