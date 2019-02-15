@@ -8,6 +8,7 @@ import json
 import os
 from chatbot.stop_words import ENGLISH_STOP_WORD
 from channels.db import database_sync_to_async
+from chatbot.utils import lemmatize_words
 
 ERROR_THRESHOLD = 0.25
 CHATBOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -18,7 +19,7 @@ class ChatBotResponse:
     def __init__(self):
 
         self.context = {}
-        self.stemmer = LancasterStemmer()
+        # self.stemmer = LancasterStemmer()
 
         data = pickle.load(open(CHATBOT_DIR+"/training_data", "rb"))
         self.words = data['words']
@@ -40,9 +41,16 @@ class ChatBotResponse:
         self.model.load(CHATBOT_DIR+'/model.tflearn')
 
     def clean_up_sentence(self, sentence):
-        sentence_words = nltk.word_tokenize(sentence)
-        sentence_words = [self.stemmer.stem(word.lower()) for word in sentence_words if word not in self.ignore_words]
-        return sentence_words
+        tokens = nltk.word_tokenize(sentence)
+        # sentence_words = [self.stemmer.stem(word.lower()) for word in sentence_words if word not in self.ignore_words]
+        tokens, _ = lemmatize_words(tokens)
+        return tokens
+
+    def get_named_entity(self, sentence):
+        tokens = nltk.word_tokenize(sentence)
+        _, proper_name = lemmatize_words(tokens)
+        print(">>>>>>>>>> Proper name: " + proper_name)
+        return proper_name
 
     def bow(self, sentence, show_details=False):
         sentence_words = self.clean_up_sentence(sentence)
@@ -99,10 +107,13 @@ class ChatBotResponse:
 
 
 def main():
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    print(BASE_DIR)
+    # BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    # print(BASE_DIR)
 
-    # chatbot_response = ChatBotResponse()
+
+    chatbot = ChatBotResponse()
+    chatbot.get_named_entity("My name is Minh")
+
     # flag = True
     # print("Cheri: My name is Cheri. I will answer your queries about my moped rental shop.")
     #

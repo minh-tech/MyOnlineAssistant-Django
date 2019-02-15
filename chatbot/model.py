@@ -1,6 +1,7 @@
 # things we need for NLP
 import nltk
 from nltk.stem.lancaster import LancasterStemmer
+from chatbot.utils import lemmatize_words
 
 # things we need for Tensorflow
 import numpy as np
@@ -23,7 +24,6 @@ def create_chatbot_data():
     words = []
     classes = []
     documents = []
-    ignore_words = ENGLISH_STOP_WORD
 
     for intent in intents['intents']:
         for pattern in intent['patterns']:
@@ -33,14 +33,15 @@ def create_chatbot_data():
             if intent['tag'] not in classes:
                 classes.append(intent['tag'])
 
-    words = [stemmer.stem(w.lower()) for w in words if w not in ignore_words]
+    # words = [stemmer.stem(w.lower()) for w in words if w not in ignore_words]
+    words, _ = lemmatize_words([w.lower() for w in words])
     words = sorted(list(set(words)))
 
     classes = sorted(list(set(classes)))
 
     print(len(documents), 'documents')
     print(len(classes), 'classes', classes)
-    print(len(words), 'unique stemmed words', words)
+    print(len(words), 'unique lemmatized words', words)
 
     training = []
     # output = []
@@ -78,5 +79,10 @@ def create_chatbot_data():
     pickle.dump({'words': words, 'classes': classes, 'train_x': train_x, 'train_y': train_y}, open("training_data", "wb"))
 
 
-if __name__ == "__main__":
+def main():
     create_chatbot_data()
+    pass
+
+
+if __name__ == "__main__":
+    main()

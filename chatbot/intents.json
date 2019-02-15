@@ -1,7 +1,7 @@
 {"intents": [
         {"tag": "greeting",
          "patterns": ["Hi", "How are you", "Is anyone there?", "Hello", "Good day"],
-         "responses": ["Hello, thanks for visiting", "Good to see you", "Hi there, how can I help?"],
+         "responses": ["Hello, thanks for visiting", "Good to see you", "Hi, how can I help?"],
          "context_set": ""
         },
         {"tag": "goodbye",
@@ -13,20 +13,20 @@
          "responses": ["Happy to help!", "Any time!", "My pleasure"]
         },
         {"tag": "overview",
-         "patterns": ["Tell me about him", "Who is he?", "What did he do?"],
+         "patterns": ["Tell me about him", "Who is he?", "What's his job before?"],
          "responses": ["He is a software developer/He worked on Java in TMA Solutions for 1.5 years/After that, he came Canada to study cyber-security at George Brown college/He also started learning Python, Javascript and created me in this time"]
         },
-        {"tag": "hours",
-         "patterns": ["What hours are you open?", "What are your hours?", "When are you open?" ],
-         "responses": ["We're open every day 9am-9pm", "Our hours are 9am-9pm every day"]
+        {"tag": "knowledge",
+         "patterns": ["What does he know?", "What can he do?" ],
+         "responses": ["He knows Java, Python, and Javascript", "He worked on Java for 1.5 years/He self-learned Python for 6 months"]
         },
-        {"tag": "mopeds",
-         "patterns": ["Which mopeds do you have?", "What kinds of mopeds are there?", "What do you rent?" ],
-         "responses": ["We rent Yamaha, Piaggio and Vespa mopeds", "We have Piaggio, Vespa and Yamaha mopeds"]
+        {"tag": "chatbot",
+         "patterns": ["Who are you?", "What are you?", "How were you created?" ],
+         "responses": ["I'm a chatbot created by Minh using Natural Language Processing (NLP) and Tensorflow", "I'm a chatbot created when Minh started to research AI"]
         },
-        {"tag": "payments",
-         "patterns": ["Do you take credit cards?", "Do you accept Mastercard?", "Are you cash only?" ],
-         "responses": ["We accept VISA, Mastercard and AMEX", "We accept most major credit cards"]
+        {"tag": "project",
+         "patterns": ["What projects did he do up to now?", "What projects did he do?"],
+         "responses": ["He and his team did web-base communication in time so that the customer is very satisfied", "Chatbot project, that is me, is the big one on Python he did until now"]
         },
         {"tag": "opentoday",
          "patterns": ["Are you open today?", "When do you open today?", "What are your hours today?"],
