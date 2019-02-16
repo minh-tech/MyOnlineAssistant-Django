@@ -10,6 +10,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     show_details = True
     chatbot = ChatBotResponse()
     username = "Visitor"
+    ask_name = False
 
     """
     Called when the websocket is handshaking as part of initial connection.
@@ -85,7 +86,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 }
             )
 
-            # Chatbot welcome when user come back
+            # Chatbot welcomes when user come back
             welcome = await ChatBotResponse.welcome(self.username, True)
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -99,7 +100,8 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             # await self.insert_message_into_database(settings.BOT_NAME, welcome)
 
         else:
-            # Chatbot welcome
+            # Chatbot welcomes first time
+            self.ask_name = True
             welcome = await ChatBotResponse.welcome(self.username, False)
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -128,18 +130,38 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         )
         await self.insert_message_into_database(self.username, message)
 
-        # Chat-bot response
-        response = await self.chatbot.response(message, self.username)
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                "type": "chat.message",
-                "room_id": self.user_id,
-                "username": settings.BOT_NAME,
-                "message": response,
-            }
-        )
-        await self.insert_message_into_database(settings.BOT_NAME, response)
+        if self.ask_name:
+            name = await self.chatbot.get_named_entity(message)
+
+            if name != "" and name != settings.BOT_NAME:
+
+                self.ask_name = False
+                self.username = name
+                response = await self.chatbot.welcome(self.username, False)
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        "type": "chat.message",
+                        "room_id": self.user_id,
+                        "username": settings.BOT_NAME,
+                        "message": response,
+                    }
+                )
+                await self.insert_message_into_database(settings.BOT_NAME, response)
+
+        else:
+            # Chat-bot response
+            response = await self.chatbot.response(message, self.username)
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "chat.message",
+                    "room_id": self.user_id,
+                    "username": settings.BOT_NAME,
+                    "message": response,
+                }
+            )
+            await self.insert_message_into_database(settings.BOT_NAME, response)
 
     # ----Handle user and messages from database---- #
     """

@@ -50,7 +50,8 @@ def create_chatbot_data():
     for doc in documents:
         bag = []
         pattern_words = doc[0]
-        pattern_words = [stemmer.stem(word.lower()) for word in pattern_words]
+        # pattern_words = [stemmer.stem(word.lower()) for word in pattern_words]
+        pattern_words, _ = lemmatize_words([w.lower() for w in pattern_words])
         for w in words:
             bag.append(1) if w in pattern_words else bag.append(0)
 

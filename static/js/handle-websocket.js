@@ -1,7 +1,7 @@
 //------------------- Pop-up ask username -------------------
-const modal = document.querySelector('#myModal');
-const okBtn = document.querySelector('.ok');
-const inputName = document.querySelector('.input-name');
+//const modal = document.querySelector('#myModal');
+//const okBtn = document.querySelector('.ok');
+//const inputName = document.querySelector('.input-name');
 
 //---------------Websocket------------------------------
 const sendButton = document.querySelector(".send");
@@ -20,64 +20,73 @@ var socket = new ReconnectingWebSocket(ws_path);
 //------------------- Pop-up ask username -------------------
 var username = getCookieUser("username", "Visitor");
 
-window.addEventListener(
-    'load',
-    function() {
-        if (username.toLowerCase() == "visitor") {
-            modal.style.display = "block";
-        } else {
-            modal.style.display = "none";
-
-            waitForSocketConnection(
-                socket,
-                // Join room
-                () => {socket.send(JSON.stringify({
-                    "command": "join",
-                    "username": username,
-                }))}
-            )
-        }
-    },
-    false)
-
-okBtn.addEventListener(
-    'click',
-    function() {
-        getInputName();
-    },
-    false)
-
-window.addEventListener(
-    'click',
-    function(event) {
-        if (event.target == modal) {
-            getInputName();
-        }
-    },
-    false)
-
-// Handle Enter key
-inputName.addEventListener(
-    'keypress',
-    function(e) {
-        if(e.which == 13) {
-            getInputName();
-        }
-    },
-    false);
-
-function getInputName() {
-    modal.style.display = "none";
-    username = inputName.value;
-    if (username=="") username = "Visitor";
-    inputName.value = "";
-
-    addCookie("username", username, 7);
-    socket.send(JSON.stringify({
+waitForSocketConnection(
+    socket,
+    // Join room
+    () => {socket.send(JSON.stringify({
         "command": "join",
         "username": username,
-    }));
-}
+    }))}
+)
+
+//window.addEventListener(
+//    'load',
+//    function() {
+//        if (username.toLowerCase() == "visitor") {
+//            modal.style.display = "block";
+//        } else {
+//            modal.style.display = "none";
+//
+//            waitForSocketConnection(
+//                socket,
+//                // Join room
+//                () => {socket.send(JSON.stringify({
+//                    "command": "join",
+//                    "username": username,
+//                }))}
+//            )
+//        }
+//    },
+//    false)
+//
+//okBtn.addEventListener(
+//    'click',
+//    function() {
+//        getInputName();
+//    },
+//    false)
+//
+//window.addEventListener(
+//    'click',
+//    function(event) {
+//        if (event.target == modal) {
+//            getInputName();
+//        }
+//    },
+//    false)
+//
+//// Handle Enter key
+//inputName.addEventListener(
+//    'keypress',
+//    function(e) {
+//        if(e.which == 13) {
+//            getInputName();
+//        }
+//    },
+//    false);
+//
+//function getInputName() {
+//    modal.style.display = "none";
+//    username = inputName.value;
+//    if (username=="") username = "Visitor";
+//    inputName.value = "";
+//
+//    addCookie("username", username, 7);
+//    socket.send(JSON.stringify({
+//        "command": "join",
+//        "username": username,
+//    }));
+//}
 
 //---------------Websocket------------------------------
 
@@ -231,6 +240,7 @@ function waitForSocketConnection(_socket, callback) {
 openButton.onclick = function() {
     chatBox.style.display = "block";
     messages.scrollTop = messages.scrollHeight;
+    input.focus()
     return false;
 }
 

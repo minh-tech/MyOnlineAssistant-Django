@@ -9,6 +9,7 @@ import os
 from chatbot.stop_words import ENGLISH_STOP_WORD
 from channels.db import database_sync_to_async
 from chatbot.utils import lemmatize_words
+from nltk.tag import StanfordNERTagger
 
 ERROR_THRESHOLD = 0.25
 CHATBOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -46,11 +47,17 @@ class ChatBotResponse:
         tokens, _ = lemmatize_words(tokens)
         return tokens
 
+    @database_sync_to_async
     def get_named_entity(self, sentence):
         tokens = nltk.word_tokenize(sentence)
-        _, proper_name = lemmatize_words(tokens)
-        print(">>>>>>>>>> Proper name: " + proper_name)
-        return proper_name
+        st = StanfordNERTagger(CHATBOT_DIR + '/Standford_lib/english.all.3class.distsim.crf.ser.gz',
+                               CHATBOT_DIR + '/Standford_lib/stanford-ner.jar')
+
+        tagged_words_list = st.tag(tokens)
+        for word, tag in tagged_words_list:
+            if tag == 'PERSON':
+                return word
+        return ""
 
     def bow(self, sentence, show_details=False):
         sentence_words = self.clean_up_sentence(sentence)
@@ -71,6 +78,7 @@ class ChatBotResponse:
         return_list = []
         for r in results:
             return_list.append((self.classes[r[0]], r[1]))
+        print(return_list)
         return return_list
 
     @database_sync_to_async
@@ -112,8 +120,10 @@ def main():
 
 
     chatbot = ChatBotResponse()
-    chatbot.get_named_entity("My name is Minh")
-
+    name = chatbot.get_named_entity("You can call me by Harrison")
+    print(name)
+    # response = chatbot.response("Nice to meet you")
+    # print(response)
     # flag = True
     # print("Cheri: My name is Cheri. I will answer your queries about my moped rental shop.")
     #
@@ -126,6 +136,7 @@ def main():
     #     else:
     #         flag = False
     #         print("Cheri: Bye! Take care...")
+    pass
 
 
 if __name__ == '__main__':
