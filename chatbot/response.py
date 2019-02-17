@@ -42,47 +42,10 @@ class ChatBotResponse:
         self.model = tflearn.DNN(net, tensorboard_dir=logs)
         self.model.load(CHATBOT_DIR+'/model.tflearn')
 
-    @database_sync_to_async
-    def setup_init(self):
-        self.context = {}
-        self.username = "Visitor"
-        # self.stemmer = LancasterStemmer()
-
-        data = pickle.load(open(CHATBOT_DIR + "/training_data", "rb"))
-        self.words = data['words']
-        self.ignore_words = ENGLISH_STOP_WORD
-        self.classes = data['classes']
-        train_x = data['train_x']
-        train_y = data['train_y']
-
-        with open(CHATBOT_DIR + '/intents.json') as json_data:
-            self.intents = json.load(json_data)
-
-        net = tflearn.input_data(shape=[None, len(train_x[0])])
-        net = tflearn.fully_connected(net, 8)
-        net = tflearn.fully_connected(net, 8)
-        net = tflearn.fully_connected(net, len(train_y[0]), activation='softmax')
-        net = tflearn.regression(net)
-        logs = CHATBOT_DIR + '/tflearn_logs'
-        self.model = tflearn.DNN(net, tensorboard_dir=logs)
-        self.model.load(CHATBOT_DIR + '/model.tflearn')
-
     def clean_up_sentence(self, sentence):
         tokens = nltk.word_tokenize(sentence)
         tokens = lemmatize_words(tokens)
         return tokens
-
-    @database_sync_to_async
-    def get_named_entity(self, sentence):
-        tokens = nltk.word_tokenize(sentence)
-        st = StanfordNERTagger(CHATBOT_DIR + '/Standford_lib/english.all.3class.distsim.crf.ser.gz',
-                               CHATBOT_DIR + '/Standford_lib/stanford-ner.jar')
-
-        tagged_words_list = st.tag(tokens)
-        for word, tag in tagged_words_list:
-            if tag == 'PERSON':
-                return word
-        return ""
 
     def get_entity_name(self, sentence):
         tokens = nltk.word_tokenize(sentence)
@@ -166,9 +129,9 @@ def main():
 
 
     chatbot = ChatBotResponse()
-    name = chatbot.response("I am Cheri.")
-    # print(name)
-    print("chatbot get username: " + chatbot.get_username())
+    name = chatbot.clean_up_sentence("My linkedin is linkedin/harrison-Addex")
+    print(name)
+    # print("chatbot get username: " + chatbot.get_username())
     # response = chatbot.response("Nice to meet you")
     # print(response)
     # flag = True
