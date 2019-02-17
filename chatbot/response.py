@@ -87,14 +87,13 @@ class ChatBotResponse:
             while results:
                 for i in self.intents['intents']:
                     if i['tag'] == results[0][0]:
-                        # if not i['responses']:
-                        #     return ""
-                        if 'context_set' in i:
-                            self.context[user_id] = i['context_set']
 
                         if 'context_filter' not in i or \
                                 (user_id in self.context and 'context_filter' in i and
                                  i['context_filter'] == self.context[user_id]):
+
+                            if 'context_set' in i:
+                                self.context[user_id] = i['context_set']
 
                             if 'function' in i:
                                 if i['function'] == 'get_entity_name':

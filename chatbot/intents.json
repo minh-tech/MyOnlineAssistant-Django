@@ -79,7 +79,7 @@
         },
         {"tag": "askworkplace",
          "patterns": ["Yes, of course", "Sure", "Go ahead"],
-         "responses": ["Where do you work at?", "What company do you work for?", "firm", "organization"],
+         "responses": ["Where do you work at?", "What company do you work for?", "What firm do you work for?", "What organization do you work for?"],
          "context_filter": "askinfor"
         },
         {"tag": "askworkplace1",
@@ -90,7 +90,6 @@
         {"tag": "askworkplace2",
          "patterns": ["I am working at", "I am a manager at", "I am a recruiter at", "I am an employee at"],
          "responses": ["Thank you for your response. Can you connect him on Linkedin? Here is his Linkedin:|linkedin.com/in/minh-nguyen-tnh|Or you give me your linkedin and I will tell him to connect you later"],
-         "function": "get_entity_name",
          "context_filter": "askinfor",
           "context_set": "linkedin"
         },
