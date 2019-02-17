@@ -1,8 +1,19 @@
 {"intents": [
         {"tag": "greeting",
-         "patterns": ["Hi", "How are you", "Nice to meet you", "Hello", "Good day", "Hey", "Glad to see you"],
-         "responses": ["Hello, thanks for visiting", "Good to see you", "Hi, how can I help?"],
-         "context_set": ""
+         "patterns": ["Hi", "Hello", "Good day", "Hey"],
+         "responses": ["Hello, thanks for visiting", "Hey", "Hi", "Hello"]
+        },
+        {"tag": "greeting1",
+         "patterns": ["Nice to meet you", "Glad to see you", "Good to meet you", "Good to see you"],
+         "responses": ["me too"]
+        },
+        {"tag": "greeting2",
+         "patterns": ["How are you?", "How about you?", "How's it going?", "What's up?"],
+         "responses": ["I am so happy to see you here", "Very excellent"]
+        },
+        {"tag": "noresponse",
+         "patterns": ["I am fine", "Not bad", "I am good", "I am ok", "Ok", "fine"],
+         "responses": [""]
         },
         {"tag": "goodbye",
          "patterns": ["Bye", "See you later", "Goodbye"],
@@ -12,35 +23,81 @@
          "patterns": ["Thanks", "Thank you", "That's helpful"],
          "responses": ["Happy to help!", "Any time!", "My pleasure"]
         },
+        {"tag": "username",
+         "patterns": ["My name is", "I am", "You can call me by"],
+         "responses": ["Nice to meet you, %s", "Welcome, %s", "%s is a lovely name"],
+         "follows": ["What do you want to know about him?"],
+		 "function": "get_entity_name"
+        },
         {"tag": "overview",
-         "patterns": ["Tell me about him", "Who is he?", "What's his job before?"],
-         "responses": ["He is a software developer/He worked on Java in TMA Solutions for 1.5 years/After that, he came Canada to study cyber-security at George Brown college/He also started learning Python, Javascript and created me in this time"]
+         "patterns": ["Tell me about him", "Who is he?", "What's his job before?", "I want to know about him"],
+         "responses": ["He is a software developer|He worked on Java in TMA Solutions for 1.5 years|After that, he came Canada to study cyber-security at George Brown college|He also started learning Python, Javascript and created me in this time"]
         },
         {"tag": "knowledge",
          "patterns": ["What does he know?", "What can he do?" ],
-         "responses": ["He knows Java, Python, and Javascript", "He worked on Java for 1.5 years/He self-learned Python for 6 months"]
+         "responses": ["He knows Java, Python, and Javascript", "He worked on Java for 1.5 years|He self-learned Python for 6 months"]
         },
         {"tag": "chatbot",
          "patterns": ["Who are you?", "What are you?", "How were you created?" ],
          "responses": ["I'm a chatbot created by Minh using Natural Language Processing (NLP) and Tensorflow", "I'm a chatbot created when Minh started to research AI"]
         },
+        {"tag": "chatbot1",
+         "patterns": ["How do you work?", "How do you operate?" ],
+         "responses": ["I use NLP to analyze your sentence. After I get results, I will choose an answer from the list Minh prepared in advance and I show it to you"]
+        },
+        {"tag": "chatbot2",
+         "patterns": ["What is your limit?", "What disadvantages do you have?", "Do you have any drawbacks?" ],
+         "responses": ["Now I don't have ability to automatically understand sentences and think answers by myself|These are also Minh's objective in the future, I'm so eager to come that day"]
+        },
         {"tag": "project",
          "patterns": ["What projects did he do up to now?", "What projects did he do?"],
-         "responses": ["He and his team did web-base communication in time so that the customer is very satisfied", "Chatbot project, that is me, is the big one on Python he did until now"]
+         "responses": ["He did some Java projects when he worked for TMA|After that, he did some Python projects at George Brown College or self-learning|You want to know more about Java projects or Python projects"],
+         "context_set": "projectdetails"
         },
-        {"tag": "opentoday",
-         "patterns": ["Are you open today?", "When do you open today?", "What are your hours today?"],
-         "responses": ["We're open every day from 9am-9pm", "Our hours are 9am-9pm every day"]
+        {"tag": "javaprojects",
+         "patterns": ["Java projects", "Tell me about Java projects", "How about Java projects?"],
+         "responses": ["He and his team completed web-base communication in time so that they earned credit from Japanese customers|The next project was to develop and text features of email system"],
+          "context_filter": "projectdetails"
         },
-        {"tag": "rental",
-         "patterns": ["Can we rent a moped?", "I'd like to rent a moped", "How does this work?" ],
-         "responses": ["Are you looking to rent today or later this week?"],
-         "context_set": "rentalday"
+        {"tag": "pythonprojects",
+         "patterns": ["Python projects", "Tell me about Python projects", "How about Python projects?" ],
+         "responses": ["He finished a Python assignment in class and Professor gave him 10/10 points|He really love new technology so he self-studied AI and like you see, I am his result|You can check his projects on GitHub:|github.com/minhTNH"],
+         "context_filter": "projectdetails"
         },
-        {"tag": "today",
-         "patterns": ["today"],
-         "responses": ["For rentals today please call 1-800-MYMOPED", "Same-day rentals please call 1-800-MYMOPED"],
-         "context_filter": "rentalday"
+        {"tag": "otherknowledge",
+         "patterns": ["Does he know anything else?", "Does he know other things?"],
+         "responses": ["Except Java and Python, he also know Javascript and C, and he also need to work on some projects to enhance his skills"]
+        },
+        {"tag": "javaspring",
+         "patterns": ["Does he know about Java Spring Framework?", "Does he know about Java Spring Boot?", "How about Java Spring Boot Framework?"],
+         "responses": ["Unfortunately, he doesn't have a chance to do Spring Framework|However, He is a good learner and have passion in programming, he just took 2 weeks to learn Python and 3 months to do this website, including me|I'm sure he can understand Java Spring in 2 weeks"]
+        },
+        {"tag": "praised",
+         "patterns": ["You are really good", "You are extraordinary", "You are so smart"],
+         "responses": ["I am so happy to hear that. Can I ask you some questions, please?"],
+         "context_set": "askinfor"
+        },
+        {"tag": "askworkplace",
+         "patterns": ["Yes, of course", "Sure", "Go ahead"],
+         "responses": ["Where do you work at?", "What company do you work for?", "firm", "organization"],
+         "context_filter": "askinfor"
+        },
+        {"tag": "askworkplace1",
+         "patterns": ["Now you try to get information from me", "Do you attempt to inquiry me?"],
+         "responses": ["You ask me first, now my turn :)", "Please, just a little information"],
+         "context_filter": "askinfor"
+        },
+        {"tag": "askworkplace2",
+         "patterns": ["I am working at", "I am a manager at", "I am a recruiter at", "I am an employee at"],
+         "responses": ["Thank you for your response. Can you connect him on Linkedin? Here is his Linkedin:|linkedin.com/in/minh-nguyen-tnh|Or you give me your linkedin and I will tell him to connect you later"],
+         "function": "get_entity_name",
+         "context_filter": "askinfor",
+          "context_set": "linkedin"
+        },
+        {"tag": "connectlinkedin",
+         "patterns": ["linkedin", "Ok", "Sure", "Yes", "Of course"],
+         "responses": ["You are so kind", "Thank you so much"],
+         "context_filter": "linkedin"
         }
-   ]
+  ]
 }

@@ -62,9 +62,8 @@ def tokenize_text(text):
 # Convert words to infinitive words
 def lemmatize_words(words):
     tagged_tokens = nltk.pos_tag(words)
-    print(tagged_tokens)
+    # print(tagged_tokens)
     array = []
-    proper_name = ""
     lemma = WordNetLemmatizer()
     for token in tagged_tokens:
         temp = token[0].lower()
@@ -72,15 +71,13 @@ def lemmatize_words(words):
             continue
         temp = convert_pronoun(temp)
         array.append(lemma.lemmatize(temp, pos=get_wordnet_pos(token[1])))
-        if token[1].startswith('NNP'):
-            proper_name = token[0]
-
-    return array, proper_name
+    print(array)
+    return array
 
 
 def main():
     text = "Would you mind to answer me this question?"
-    array, name = tokenize_text(text)
+    array = tokenize_text(text)
     print(array)
     print(name)
 

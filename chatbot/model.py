@@ -16,7 +16,6 @@ from chatbot.stop_words import ENGLISH_STOP_WORD
 
 
 def create_chatbot_data():
-    stemmer = LancasterStemmer()
 
     with open('intents.json') as json_data:
         intents = json.load(json_data)
@@ -33,8 +32,7 @@ def create_chatbot_data():
             if intent['tag'] not in classes:
                 classes.append(intent['tag'])
 
-    # words = [stemmer.stem(w.lower()) for w in words if w not in ignore_words]
-    words, _ = lemmatize_words([w.lower() for w in words])
+    words = lemmatize_words([w.lower() for w in words])
     words = sorted(list(set(words)))
 
     classes = sorted(list(set(classes)))
@@ -50,8 +48,7 @@ def create_chatbot_data():
     for doc in documents:
         bag = []
         pattern_words = doc[0]
-        # pattern_words = [stemmer.stem(word.lower()) for word in pattern_words]
-        pattern_words, _ = lemmatize_words([w.lower() for w in pattern_words])
+        pattern_words = lemmatize_words([w.lower() for w in pattern_words])
         for w in words:
             bag.append(1) if w in pattern_words else bag.append(0)
 

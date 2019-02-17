@@ -137,13 +137,13 @@ socket.onmessage = function(message) {
                     "</div>";
             break;
             case 2:
-                if (!data.message.includes("/")) {
+                if (!data.message.includes("|")) {
                     messages.innerHTML += "<div class='msg-container'>" +
                         "<span class='username'>" + data.username + "</span>" +
                         "<span class='message'>" + data.message + "</span>" +
                         "</div>";
                 } else {
-                    var sentences = data.message.split("/");
+                    var sentences = data.message.split("|");
                     for (i in sentences) {
                         messages.innerHTML += "<div class='msg-container'>" +
                             "<span class='username'>" + data.username + "</span>" +
