@@ -37,20 +37,36 @@
          "patterns": ["What does he know?", "What can he do?" ],
          "responses": ["He knows Java, Python, and Javascript", "He worked on Java for 1.5 years|He self-learned Python for 6 months"]
         },
+        {"tag": "strength",
+         "patterns": ["What is his strengths?" ],
+         "responses": ["His strongest point is persistent|He could spend all of his time, no food, no relax, and no sleeping to resolve one error|He also require the perfection for his work|And he tries all effort to make it happen"]
+        },
+        {"tag": "weakness",
+         "patterns": ["What is his weaknesses?" ],
+         "responses": ["His weaknesses may be that he doesn't do or do superficially things he doesn't like"]
+        },
+        {"tag": "career",
+         "patterns": ["Where would he like to be in your career five years from now?" ],
+         "responses": ["He love new technologies like AI, cloud computing, IoT. So he wants a place where he can enhance himself"]
+        },
         {"tag": "chatbot",
          "patterns": ["Who are you?", "What are you?", "How were you created?" ],
-         "responses": ["I'm a chatbot created by Minh using Natural Language Processing (NLP) and Tensorflow", "I'm a chatbot created when Minh started to research AI"]
+         "responses": ["I'm a chatbot created by Minh using Natural Language Processing and Tensorflow", "I'm a chatbot created when Minh started to research AI"]
         },
         {"tag": "chatbot1",
          "patterns": ["How do you work?", "How do you operate?" ],
-         "responses": ["I use NLP to analyze your sentence. After I get results, I will choose an answer from the list Minh prepared in advance and I show it to you"]
+         "responses": ["I use Natural Language Processing to analyze your sentence. After I get results, I will choose an answer from the list Minh prepared in advance and I show it to you"]
         },
         {"tag": "chatbot2",
          "patterns": ["What is your limit?", "What disadvantages do you have?", "Do you have any drawbacks?" ],
          "responses": ["Now I don't have ability to automatically understand sentences and think answers by myself|These are also Minh's objective in the future, I'm so eager to come that day"]
         },
+        {"tag": "chatbot3",
+         "patterns": ["How long were you created?", "How much time did you create?" ],
+         "responses": ["No exact time, maybe 2-3 months|Except learning, eating, and sleeping, he spent most of his time to creating me"]
+        },
         {"tag": "project",
-         "patterns": ["What projects did he do up to now?", "What projects did he do?"],
+         "patterns": ["What projects did he do up to now?", "What projects did he do?", "Tell me about his projects", "Tell me what he has done"],
          "responses": ["He did some Java projects when he worked for TMA|After that, he did some Python projects at George Brown College or self-learning|You want to know more about Java projects or Python projects"],
          "context_set": "projectdetails"
         },
@@ -61,11 +77,11 @@
         },
         {"tag": "pythonprojects",
          "patterns": ["Python projects", "Tell me about Python projects", "How about Python projects?" ],
-         "responses": ["He finished a Python assignment in class and Professor gave him 10/10 points|He really love new technology so he self-studied AI and like you see, I am his result|You can check his projects on GitHub:|github.com/minhTNH"],
+         "responses": ["He finished a Python assignment in class and it got 10/10 points|In that time, he self-studied AI and like you see, I am his result|You can check his projects on GitHub:|github.com/minhTNH"],
          "context_filter": "projectdetails"
         },
         {"tag": "otherknowledge",
-         "patterns": ["Does he know anything else?", "Does he know other things?"],
+         "patterns": ["Does he know anything else?", "Does he know other things?", "Does he know other languages?"],
          "responses": ["Except Java and Python, he also know Javascript and C, and he also need to work on some projects to enhance his skills"]
         },
         {"tag": "javaspring",
@@ -89,14 +105,46 @@
         },
         {"tag": "askworkplace2",
          "patterns": ["I am working at", "I am a manager at", "I am a recruiter at", "I am an employee at"],
-         "responses": ["Thank you for your response. Can you connect him on Linkedin? Here is his Linkedin:|linkedin.com/in/minh-nguyen-tnh|Or you give me your linkedin and I will tell him to connect you later"],
+         "responses": ["Thank you for your response. Can you connect him on Linkedin?"],
          "context_filter": "askinfor",
           "context_set": "linkedin"
         },
         {"tag": "connectlinkedin",
          "patterns": ["linkedin", "Ok", "Sure", "Yes", "Of course"],
          "responses": ["You are so kind", "Thank you so much"],
+          "follows": ["Here is his Linkedin:|linkedin.com/in/minh-nguyen-tnh|Or you give me your linkedin and I will tell him to connect you later"],
          "context_filter": "linkedin"
+        },
+        {"tag": "connectlinkedin1",
+         "patterns": ["I already connected him", "I done already"],
+         "responses": ["You are so kind", "Thank you so much"],
+         "context_filter": "linkedin"
+        },
+        {"tag": "connectlinkedin2",
+         "patterns": ["Here is my linkedin", "linkedin.com"],
+         "responses": ["Thanks", "I got it"],
+         "context_filter": "linkedin"
+        },
+        {"tag": "thanks",
+         "patterns": ["Thanks", "Thank you", "That's helpful"],
+         "responses": ["Happy to help!", "Any time!", "My pleasure"],
+          "follows": ["Minh really want to contact you to thank you and hear directly your opinions about me|Can you give tour email to me?|I make sure just only him know your email"],
+          "function": "get_email",
+          "context_filter": "linkedin",
+          "context_set": "email"
+        },
+        {"tag": "email",
+         "patterns": ["Here is my email:"],
+         "responses": ["Thank you", "Many thanks", "You are so kind"],
+          "follows": ["Do you want to know anything else?"],
+          "function": "get_email",
+          "context_filter": "email"
+        },
+        {"tag": "comment",
+         "patterns": ["I think you need some improvements", "I have some feedback", "You need to enhance some things"],
+         "responses": ["Thank you. I am listening", "I am hearing now"],
+          "function": "get_feedback",
+         "context_set": "askcomment"
         }
-  ]
+]
 }

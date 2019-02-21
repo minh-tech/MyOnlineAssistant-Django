@@ -11,28 +11,28 @@ const chatBox = document.querySelector("#myForm");
 const input = document.querySelector(".text-input");
 const messages = document.querySelector(".messages");
 
-var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-var user_id = getUserIdFromCookie();
-var ws_path = ws_scheme + '://' + window.location.host + "/chat/stream/" + user_id + "/";
+let ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+let user_id = getUserIdFromCookie();
+let ws_path = ws_scheme + '://' + window.location.host + "/chat/stream/" + user_id + "/";
 console.log("Connecting to " + ws_path);
-var socket = new ReconnectingWebSocket(ws_path);
+let socket = new ReconnectingWebSocket(ws_path);
 
 //------------------- Pop-up ask username -------------------
-var username = getCookieUser("username", "Visitor");
+// var username = getCookieUser("username", "Guest");
 
 waitForSocketConnection(
     socket,
     // Join room
     () => {socket.send(JSON.stringify({
         "command": "join",
-        "username": username,
+        // "username": username,
     }))}
 )
 
 //window.addEventListener(
 //    'load',
 //    function() {
-//        if (username.toLowerCase() == "visitor") {
+//        if (username.toLowerCase() == "Guest") {
 //            modal.style.display = "block";
 //        } else {
 //            modal.style.display = "none";
@@ -78,7 +78,7 @@ waitForSocketConnection(
 //function getInputName() {
 //    modal.style.display = "none";
 //    username = inputName.value;
-//    if (username=="") username = "Visitor";
+//    if (username=="") username = "Guest";
 //    inputName.value = "";
 //
 //    addCookie("username", username, 7);
@@ -121,7 +121,7 @@ function sendMessage() {
 socket.onmessage = function(message) {
     // Decode the JSON
     console.log("Got websocket message: " + message.data);
-    var data = JSON.parse(message.data);
+    let data = JSON.parse(message.data);
     // Handle errors
     if (data.error) {
         alert(data.error);
@@ -143,7 +143,7 @@ socket.onmessage = function(message) {
                         "<span class='message'>" + data.message + "</span>" +
                         "</div>";
                 } else {
-                    var sentences = data.message.split("|");
+                    let sentences = data.message.split("|");
                     for (i in sentences) {
                         messages.innerHTML += "<div class='msg-container'>" +
                             "<span class='username'>" + data.username + "</span>" +
@@ -171,9 +171,9 @@ socket.onmessage = function(message) {
 // Add keys and values to cookie
 function addCookie(key, value, expire_days) {
 
-    var expire_date = new Date();
+    let expire_date = new Date();
     expire_date.setTime(expire_date.getTime() + (expire_days*24*60*60*1000));
-    var expires = "expires=" + expire_date.toUTCString();
+    let expires = "expires=" + expire_date.toUTCString();
 
     console.log("Add Cookie: " + key + "=" + value + ";" + expires + ";path=/")
     document.cookie = key + "=" + value + ";" + expires + ";path=/";
@@ -181,16 +181,16 @@ function addCookie(key, value, expire_days) {
 
 // Get Cookie by key, set default value if key is not existed
 function getCookieUser(key, default_value){
-    var edited_key = key + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var objects = decodedCookie.split(';');
-    for (var i = 0; i < objects.length; i++) {
+    let edited_key = key + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let objects = decodedCookie.split(';');
+    for (let i = 0; i < objects.length; i++) {
         obj = objects[i];
         while (obj.charAt(0)==' ') {
             obj = obj.substring(1);
         }
         if (obj.indexOf(edited_key) == 0) {
-            var value = obj.substring(edited_key.length, obj.length)
+            let value = obj.substring(edited_key.length, obj.length)
             console.log("Cookie: " + key + " = " + value);
             return value;
         }
@@ -201,9 +201,9 @@ function getCookieUser(key, default_value){
 
 // Get User ID from cookie or create one
 function getUserIdFromCookie(){
-    var user_id = getCookieUser("user_id", "");
+    let user_id = getCookieUser("user_id", "");
     if (user_id == "") {
-        var user_id = String(Date.now());
+        user_id = String(Date.now());
         addCookie("user_id", user_id, 7);
     }
     console.log("User id: " + user_id);

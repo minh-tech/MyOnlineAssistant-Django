@@ -7,17 +7,15 @@ import pytz
 
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
-    show_details = True
+
     chatbot = ChatBotResponse()
-    username = "Visitor"
+    username = settings.GUEST_NAME
     """
     Called when the websocket is handshaking as part of initial connection.
     """
     async def connect(self):
         self.user_id = self.scope['url_route']['kwargs']['user_id']
         self.room_group_name = 'chat_%s' % self.user_id
-        # self.chatbot = await ChatBotResponse().setup_init()
-        # self.username = "Visitor"
 
         # Add them to the group so they get room messages
         await self.channel_layer.group_add(
@@ -43,12 +41,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     Called when we get a text frame. Channels will JSON-decode the payload for us and pass it as the first argument.
     """
     async def receive_json(self, content):
-        if self.show_details:
-            print(">>>>>>>>>>>>>>>> content: ", content)
+        print(">>>>>>>>>>>>>>>> content: ", content)
 
         command = content.get("command", None)
         if command == "join":
-            self.username = content.get("username", "Visitor")
             await self.enter_website()
         elif command == "send":
             await self.send_room(content["message"])
@@ -132,7 +128,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         # Chat-bot response
         response = await self.chatbot.response(message, self.user_id)
         if response:
-            self.username = await self.chatbot.get_username()
+            # Get username from chatbot and check it changed or not
+            name = await self.chatbot.get_username()
+            if self.username != name and name != settings.GUEST_NAME:
+                self.username = name
+                self.update_user_into_database()
+
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -146,25 +147,23 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     # ----Handle user and messages from database---- #
     """
-        Update a user into database and check the user existed in database
+        Update a user into database
     """
     async def update_user_into_database(self):
 
-        existed = True
         query_set = User.objects.filter(user_id=self.user_id)
         date_now = datetime.now()
         if not query_set.exists():
             User.objects.create(user_id=self.user_id, username=self.username, email="", last_active_date=date_now)
-            existed = False
         else:
-
             user = query_set[0]
-            if self.username.lower() != "visitor":
+            if self.username != settings.GUEST_NAME:
                 user.username = self.username
+            else:
+                self.username = user.username
             if date_now != user.last_active_date:
                 user.last_active_date = date_now
             user.save()
-        return existed
 
     """
         Insert a message into database

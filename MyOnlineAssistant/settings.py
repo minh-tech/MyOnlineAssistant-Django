@@ -18,6 +18,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Chat bot name
 BOT_NAME = "Cheri"
 
+# Visitor name
+GUEST_NAME = "Guest"
+
 # Mark to Split paragraph
 SPLIT_MARK = "/"
 

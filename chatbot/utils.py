@@ -71,7 +71,7 @@ def lemmatize_words(words):
             continue
         temp = convert_pronoun(temp)
         array.append(lemma.lemmatize(temp, pos=get_wordnet_pos(token[1])))
-    print(array)
+    # print(array)
     return array
 
 

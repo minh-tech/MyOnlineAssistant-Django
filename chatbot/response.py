@@ -20,7 +20,7 @@ class ChatBotResponse:
     def __init__(self):
 
         self.context = {}
-        self.username = "Visitor"
+        self.username = "Guest"
         # self.stemmer = LancasterStemmer()
 
         data = pickle.load(open(CHATBOT_DIR+"/training_data", "rb"))
@@ -54,7 +54,7 @@ class ChatBotResponse:
 
         tagged_words_list = st.tag(tokens)
         for word, tag in tagged_words_list:
-            if tag == 'PERSON':
+            if tag == 'PERSON' or tag == 'ORGANIZATION':
                 return word
         return ""
 
@@ -110,14 +110,15 @@ class ChatBotResponse:
         return self.username
 
     @database_sync_to_async
-    def welcome(self, username="", existed=False):
+    def welcome(self, username="Guest", existed=False):
         if existed:
-            welcome = "Glad to see you come back|What do you want to know this time?"
-        elif "visitor" in username.lower():
+            if "Guest" in username:
+                welcome = "Glad to see you come back|What do you want to know this time?"
+            else:
+                welcome = "Happy to see you again, %s|What do you want to know this time?" % username
+        else:
             welcome = "Hi, there. How are you? My name is Cheri|I am an online assistant of Minh|" \
                       "What should I call you by?"
-        else:
-            welcome = "Nice to meet you, %s|What do you want to know about him?" % username
 
         return welcome
 
@@ -128,8 +129,8 @@ def main():
 
 
     chatbot = ChatBotResponse()
-    name = chatbot.clean_up_sentence("My linkedin is linkedin/harrison-Addex")
-    print(name)
+    # name = chatbot.classify("What are his weaknesses?")
+    # print(name)
     # print("chatbot get username: " + chatbot.get_username())
     # response = chatbot.response("Nice to meet you")
     # print(response)
